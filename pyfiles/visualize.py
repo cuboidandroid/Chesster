@@ -28,14 +28,14 @@ visu[ind[0], ind[1]] = 1
 print(visu)
 print('')
 
-# axs[0, 2].imshow(visu)
-#
-# visu = setup_board()
-# ind = np.array(list(zip(*knight(ex, ey))))
-# visu[ind[0], ind[1]] = -1
-# visu[ex, ey] = 2
-#
-# axs[1, 0].imshow(visu)
+ex, ey = 3, 6
+visu = setup_position()
+ind = np.array(list(zip(*knight(ex, ey, visu))))
+visu[ind[0], ind[1]] = 1
+print(visu)
+print('')
+
+axs[1, 0].imshow(visu)
 #
 # visu = setup_board()
 # ind = np.array(list(zip(*king(ex, ey))))
@@ -50,4 +50,4 @@ print('')
 # visu[ex, ey] = 2
 #
 # axs[1, 2].imshow(visu)
-# plt.show()
+plt.show()

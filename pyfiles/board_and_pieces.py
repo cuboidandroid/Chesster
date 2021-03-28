@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def setup_board():
+def startup_board():
     board = np.zeros((8, 8)).astype(int)
     board[7][:] = [50, 30, 32, 90, 99, 32, 30, 50]
     board[6][:] = [10, 10, 10, 10, 10, 10, 10, 10]
@@ -14,7 +14,7 @@ def setup_position():
     board = np.array([[00, -50, 00, 00, 00, -50, -99, 00],
                       [00, 00, 00, 00, 00, -10, -10, -10],
                       [-10, 00, 00, 00, 00, 00, 00, 00],
-                      [00, 00, 00, 00, 00, 00, 00, 00],
+                      [00, 00, 00, 00, 00, 00, 30, 00],
                       [00, 00, 00, 00, 00, 00, 00, 00],
                       [00, 00, 00, 00, 10, 00, 00, 90],
                       [00, 00, 00, 00, 00, 00, 10, 10],
@@ -23,7 +23,7 @@ def setup_position():
     return board
 
 
-def bishop(x, y, board=setup_board()):
+def bishop(x, y, board=startup_board()):
     scope = set()
     directions = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
     for d in directions:
@@ -41,7 +41,7 @@ def bishop(x, y, board=setup_board()):
     return scope
 
 
-def rook(x, y, board=setup_board()):
+def rook(x, y, board=startup_board()):
     scope = set()
     directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     for d in directions:
@@ -60,25 +60,14 @@ def rook(x, y, board=setup_board()):
 
     return scope
 
-    # return {(x + n, y + n) for n in range(0, 8) if (n != 0) and (0 <= x + n < 8) and (0 <= y + n < 8)
-    #         and (board(x + n, y + n) == 0) elif (board(x + n, y + n) * (board(x, y) > 0))} | \
-    #        {(x + n, y + n) for n in range(-7, 0) if n != 0 and 0 <= x + n < 8 and 0 <= y + n < 8} | \
-    #        {(x + n, y - n) for n in range(0, 8) if n != 0 and 0 <= x + n < 8 and 0 <= y - n < 8} | \
-    #        {(x + n, y - n) for n in range(-7, 0) if n != 0 and 0 <= x + n < 8 and 0 <= y - n < 8}
 
-
-# def rook(x, y):
-#     return {(x + n, y) for n in range(-7, 8) if n != 0 and 0 <= x + n < 8} | \
-#            {(x, y + n) for n in range(-7, 8) if n != 0 and 0 <= y + n < 8}
-
-
-def queen(x, y, board=setup_board()):
+def queen(x, y, board=startup_board()):
     return bishop(x, y, board) | rook(x, y, board)
 
 
-def knight(x, y):
-    return {(x + i, y + j) for i, j in zip([1, 2, -1, -2, 1, 2, -1, -2], [2, 1, 2, 1, -2, -1, -2, -1])
-            if 0 <= x + i < 8 and 0 <= y + j < 8}
+def knight(x, y, board=startup_board()):
+    return {(x+i, y+j) for i, j in zip([1, 2, -1, -2, 1, 2, -1, -2], [2, 1, 2, 1, -2, -1, -2, -1])
+            if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}
 
 
 def king(x, y):
