@@ -25,10 +25,26 @@ def main():
     gs = game_session.GameSession()
     load_images()
     running = True
+    sq_selected = ()  # last click of a user
+    player_clicks = []  # sq selected and destination sq
     while running:
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
+
+            elif e.type == p.MOUSEBUTTONDOWN:
+                location = p.mouse.get_pos()
+                col = location[0] // sq_size
+                row = location[1] // sq_size
+                if sq_selected == (row, col):  # twice clicked same square
+                    sq_selected = ()  # deselect
+                    player_clicks = []
+                else:
+                    sq_selected = (row, col)
+                    player_clicks.append(sq_selected)
+                if len(player_clicks) == 2:
+                    pass
+
         draw_game(screen, gs)
         # clock.tick(max_fps)
         p.display.flip()
