@@ -1,8 +1,5 @@
 import pygame as p
 from pyfiles import game_session
-import os
-print(os.getcwd())
-os.chdir('..')
 
 width = height = 512
 dimension = 8
