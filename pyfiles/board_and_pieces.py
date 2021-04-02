@@ -1,29 +1,5 @@
-import numpy as np
 
-
-def startup_board():
-    board = np.zeros((8, 8)).astype(int)
-    board[7][:] = [50, 30, 32, 90, 99, 32, 30, 50]
-    board[6][:] = [10, 10, 10, 10, 10, 10, 10, 10]
-    board[0][:] = -board[7][:]
-    board[1][:] = -board[6][:]
-    return board
-
-
-def setup_position():
-    board = np.array([[00, -50, 00, 00, 00, -50, -99, 00],
-                      [00, 00, 00, 00, 00, -10, -10, -10],
-                      [-10, 00, 00, 00, 00, 00, 00, 00],
-                      [00, 00, 00, 00, 00, 00, 30, 00],
-                      [00, 00, 00, 00, 00, 00, 00, 00],
-                      [00, 00, 00, 00, 10, 00, 00, 90],
-                      [00, 00, 00, 00, 00, 00, 10, 10],
-                      [00, 50, 00, 00, 00, 50, 32, 99]
-                      ])
-    return board
-
-
-def bishop(x, y, board=startup_board()):
+def bishop(x, y, board):
     scope = set()
     directions = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
     for d in directions:
@@ -41,7 +17,7 @@ def bishop(x, y, board=startup_board()):
     return scope
 
 
-def rook(x, y, board=startup_board()):
+def rook(x, y, board):
     scope = set()
     directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     for d in directions:
@@ -61,11 +37,11 @@ def rook(x, y, board=startup_board()):
     return scope
 
 
-def queen(x, y, board=startup_board()):
+def queen(x, y, board):
     return bishop(x, y, board) | rook(x, y, board)
 
 
-def knight(x, y, board=startup_board()):
+def knight(x, y, board):
     return {(x+i, y+j) for i, j in zip([1, 2, -1, -2, 1, 2, -1, -2], [2, 1, 2, 1, -2, -1, -2, -1])
             if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}
 

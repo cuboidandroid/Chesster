@@ -24,6 +24,7 @@ def main():
     running = True
     sq_selected = ()  # last click of a user
     player_clicks = []  # sq selected and destination sq
+    highlights = []
     while running:
         for e in p.event.get():
             if e.type == p.QUIT:
@@ -39,30 +40,36 @@ def main():
                     row = location[1] // sq_size
                     if sq_selected == (row, col):  # twice clicked same square
                         sq_selected = ()  # deselect
+                        highlights = []
                         player_clicks = []
                     else:
                         sq_selected = (row, col)
+                        if gs.is_on_a_move(sq_selected):
+                            highlights = gs.get_options(sq_selected)
                         player_clicks.append(sq_selected)
                     if len(player_clicks) == 2:
                         move = Move(player_clicks[0], player_clicks[1], gs.board)
                         print(move.generate_move_notation())
                         gs.make_move(move)
                         sq_selected = ()  # deselect
+                        highlights = []
                         player_clicks = []
 
                 elif r_click:
                     sq_selected = ()  # deselect
+                    highlights = []
                     player_clicks = []
                     gs.undo_move()
 
-        draw_game(screen, gs, player_clicks)
+        draw_game(screen, gs, player_clicks, highlights)
         # clock.tick(max_fps)
         p.display.flip()
 
 
-def draw_game(screen, gs, fields):
+def draw_game(screen, gs, fields, highlights):
     draw_board(screen)
     draw_selected(screen, fields)
+    draw_selected(screen, highlights)
     draw_pieces(screen, gs.board)
 
 
