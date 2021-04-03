@@ -59,9 +59,9 @@ class GameSession:
         elif abs(self.board[field]) == 50:
             opt = rook(field[0], field[1], self.board)
         elif self.board[field] == 10:
-            opt = wpawn(field[0], field[1])
+            opt = wpawn(field[0], field[1], self.board)
         elif self.board[field] == -10:
-            opt = bpawn(field[0], field[1])
+            opt = bpawn(field[0], field[1], self.board)
         elif abs(self.board[field]) == 99:
             opt = king(field[0], field[1])
 

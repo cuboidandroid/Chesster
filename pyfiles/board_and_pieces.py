@@ -44,34 +44,67 @@ def queen(x, y, board):
 def knight(x, y, board):
     return {(x+i, y+j) for i, j in zip([1, 2, -1, -2, 1, 2, -1, -2], [2, 1, 2, 1, -2, -1, -2, -1])
             if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}
+# if inside the board and square is not occupied by same colored piece
 
 
-def king(x, y):
+def king(x, y, board):
     return {(x + i, y + j) for i, j in zip([-1, 0, 1, -1, 0, 1, -1, 0, 1], [-1, -1, -1, 0, 0, 0, 1, 1, 1])
-            if 0 <= x + i < 8 and 0 <= y + j < 8}
+            if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}
 
 
-def wpawn(x, y):
+def wpawn(x, y, board):
     out = set()
-    if y > 1:
+
+# start move and normal move
+
+    if board[x-1, y] == 0 and (x-1 > 0):
         out.add((x - 1, y))
-        if x == 6:
+        if x == 6 and board[x-2, y] == 0:
             out.add((x - 2, y))
-    if y == 1:  # promotion
+
+# capture
+
+    if (x-1 > 0) and (y+1 <= 7):
+        if (board[x-1, y+1]) * board[x, y] < 0:
+            out.add((x-1, y+1))
+
+    if (x-1 > 0) and (y-1 >= 0):
+        if (board[x-1, y-1]) * board[x, y] < 0:
+            out.add((x-1, y-1))
+
+# en passant
+
+# promotion
+
+    if y == 1:
         pass
     return out
 
 
-def bpawn(x, y):
+def bpawn(x, y, board):
     out = set()
-    if y < 6:
+
+    # start move and normal move
+
+    if board[x + 1, y] == 0 and (x+1 < 7):
         out.add((x + 1, y))
-        if x == 1:
+        if x == 1 and board[x + 2, y] == 0:
             out.add((x + 2, y))
-    if y == 6:  # promotion
+
+    # capture
+
+    if (x+1 < 7) and (y+1 <= 7):
+        if (board[x + 1, y + 1]) * board[x, y] < 0:
+            out.add((x + 1, y + 1))
+
+    if (x+1 < 7) and (y-1 >= 0):
+        if (board[x + 1, y - 1]) * board[x, y] < 0:
+            out.add((x + 1, y - 1))
+
+    # en passant
+
+    # promotion
+
+    if y == 1:
         pass
     return out
-
-
-def check_collisions(piece):
-    return piece
