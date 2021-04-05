@@ -50,9 +50,9 @@ class GameSession:
         # maybe this should be inside the get options function (yep it should)
         if self.history:
             last_move = self.history[-1]
-            if abs(last_move.moved_piece) == 10 and abs(last_move.to_sq[0] - last_move.from_sq[0]) == 2:  # 2 sq pawn move
+            if abs(last_move.moved_piece) == 10 and abs(last_move.to_sq[0] - last_move.from_sq[0]) == 2:
+                # 2 sq pawn move
                 print('Last move was jumpstart')
-
 
         return all(conditions)
 
