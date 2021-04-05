@@ -46,6 +46,14 @@ class GameSession:
         else:
             conditions.append(False)
 
+        # check if en passant might be a case in this move
+        # maybe this should be inside the get options function (yep it should)
+        if self.history:
+            last_move = self.history[-1]
+            if abs(last_move.moved_piece) == 10 and abs(last_move.to_sq[0] - last_move.from_sq[0]) == 2:  # 2 sq pawn move
+                print('Last move was jumpstart')
+
+
         return all(conditions)
 
     def get_options(self, field):
@@ -63,7 +71,7 @@ class GameSession:
         elif self.board[field] == -10:
             opt = bpawn(field[0], field[1], self.board)
         elif abs(self.board[field]) == 99:
-            opt = king(field[0], field[1])
+            opt = king(field[0], field[1], self.board)
 
         else:
             opt = set()
