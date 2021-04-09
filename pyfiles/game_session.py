@@ -128,6 +128,7 @@ class Move:
         self.from_sq = from_sq
         self.to_sq = to_sq
 
+        self.label = ''
         self.moved_piece = board[from_sq]
         self.destination_field = board[to_sq]
 
