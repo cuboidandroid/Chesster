@@ -47,13 +47,15 @@ def knight(x, y, board):
 # if inside the board and square is not occupied by same colored piece
 
 
-def king(x, y, board):
+def king(x, y, board, history):
     return {(x + i, y + j) for i, j in zip([-1, 0, 1, -1, 0, 1, -1, 0, 1], [-1, -1, -1, 0, 0, 0, 1, 1, 1])
             if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}
 
 
-def wpawn(x, y, board):
+def wpawn(x, y, board, history):
     out = set()
+    enp = set()
+    prom = set()
 
 # start move and normal move
 
@@ -73,16 +75,30 @@ def wpawn(x, y, board):
             out.add((x-1, y-1))
 
 # en passant
+    if x == 3:
+        if history:
+            last_move = history[-1]
+            if (abs(last_move.moved_piece) == 10) and \
+               (abs(last_move.to_sq[0] - last_move.from_sq[0]) == 2):
+
+                if last_move.from_sq[1] == y+1:
+                    enp.add((x-1, y+1))
+
+                elif last_move.from_sq[1] == y-1:
+                    enp.add((x-1, y-1))
+
 
 # promotion
 
     if y == 1:
         pass
-    return out
+    return out, enp, prom
 
 
-def bpawn(x, y, board):
+def bpawn(x, y, board, history):
     out = set()
+    enp = set()
+    prom = set()
 
     # start move and normal move
 
@@ -102,9 +118,20 @@ def bpawn(x, y, board):
             out.add((x + 1, y - 1))
 
     # en passant
+    if x == 4:
+        if history:
+            last_move = history[-1]
+            if (abs(last_move.moved_piece) == 10) and \
+               (abs(last_move.to_sq[0] - last_move.from_sq[0]) == 2):
+
+                if last_move.from_sq[1] == y+1:
+                    enp.add((x+1, y+1))
+
+                elif last_move.from_sq[1] == y-1:
+                    enp.add((x+1, y-1))
 
     # promotion
 
     if y == 1:
         pass
-    return out
+    return out, enp, prom

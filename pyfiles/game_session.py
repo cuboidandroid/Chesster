@@ -14,6 +14,8 @@ class GameSession:
         self.highlighted = []
         self.notation = []
         self.history = []
+        self.enp = set()
+        self.prom = set()
 
     @staticmethod
     def startup_board():
@@ -41,22 +43,24 @@ class GameSession:
 
         # check available moves for piece
 
-        if (move.to_sq[0], move.to_sq[1]) in self.get_options((move.from_sq[0], move.from_sq[1])):
+        opt, enp, prom = self.get_options((move.from_sq[0], move.from_sq[1]))
+        if (move.to_sq[0], move.to_sq[1]) in opt:
             conditions.append(True)
+        elif (move.to_sq[0], move.to_sq[1]) in enp:
+            conditions.append(True)
+            self.enp = enp
+        elif (move.to_sq[0], move.to_sq[1]) in prom:
+            conditions.append(True)
+            self.prom = prom
         else:
             conditions.append(False)
-
-        # check if en passant might be a case in this move
-        # maybe this should be inside the get options function (yep it should)
-        if self.history:
-            last_move = self.history[-1]
-            if abs(last_move.moved_piece) == 10 and abs(last_move.to_sq[0] - last_move.from_sq[0]) == 2:
-                # 2 sq pawn move
-                print('Last move was jumpstart')
 
         return all(conditions)
 
     def get_options(self, field):
+        # opt = set()
+        enp = set()
+        prom = set()
 
         if abs(self.board[field]) == 30:
             opt = knight(field[0], field[1], self.board)
@@ -67,23 +71,49 @@ class GameSession:
         elif abs(self.board[field]) == 50:
             opt = rook(field[0], field[1], self.board)
         elif self.board[field] == 10:
-            opt = wpawn(field[0], field[1], self.board)
+            opt, enp, prom = wpawn(field[0], field[1], self.board, self.history)
         elif self.board[field] == -10:
-            opt = bpawn(field[0], field[1], self.board)
+            opt, enp, prom = bpawn(field[0], field[1], self.board, self.history)
         elif abs(self.board[field]) == 99:
-            opt = king(field[0], field[1], self.board)
+            opt = king(field[0], field[1], self.board, self.history)
 
         else:
             opt = set()
-        return opt
+            enp = set()
+            prom = set()
+        return opt, enp, prom
 
     def make_move(self, move):
         if self.validate_move(move):
-            self.board[move.from_sq] = 0
-            self.board[move.to_sq] = move.moved_piece
-            self.history.append(move)
-            self.update_notation(move)
-            self.white_to_move = not self.white_to_move
+            if move.to_sq in self.enp:
+                self.board[move.from_sq] = 0
+                self.board[move.to_sq] = move.moved_piece
+
+                if self.white_to_move:
+                    self.board[(move.to_sq[0]+1, move.to_sq[1])] = 0  # en passant take with white
+                else:
+                    self.board[(move.to_sq[0]-1, move.to_sq[1])] = 0   # en passant take with black
+
+                self.history.append(move)
+                self.update_notation(move)
+                self.white_to_move = not self.white_to_move
+            elif move.to_sq in self.prom:
+
+                self.board[move.from_sq] = 0
+                self.board[move.to_sq] = move.moved_piece
+                self.history.append(move)
+                self.update_notation(move)
+                self.white_to_move = not self.white_to_move
+            else:
+
+                self.board[move.from_sq] = 0
+                self.board[move.to_sq] = move.moved_piece
+                self.history.append(move)
+                self.update_notation(move)
+                self.white_to_move = not self.white_to_move
+
+        self.enp = set()
+        self.prom = set()
 
     def update_notation(self, move):
         if move:

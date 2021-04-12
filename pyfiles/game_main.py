@@ -45,7 +45,8 @@ def main():
                     else:
                         sq_selected = (row, col)
                         if gs.is_on_a_move(sq_selected):
-                            highlights = gs.get_options(sq_selected)
+                            h1, h2, h3 = gs.get_options(sq_selected)
+                            highlights = h1 | h2 | h3
                         player_clicks.append(sq_selected)
                     if len(player_clicks) == 2:
                         move = Move(player_clicks[0], player_clicks[1], gs.board)
