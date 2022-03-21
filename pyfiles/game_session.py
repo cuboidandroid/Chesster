@@ -100,7 +100,10 @@ class GameSession:
             elif move.to_sq in self.prom:
 
                 self.board[move.from_sq] = 0
-                self.board[move.to_sq] = move.moved_piece
+                if self.white_to_move:
+                    self.board[move.to_sq] = move.promo_input
+                else:
+                    self.board[move.to_sq] = - move.promo_input
                 self.history.append(move)
                 self.update_notation(move)
                 self.white_to_move = not self.white_to_move
@@ -154,13 +157,14 @@ class GameSession:
 
 class Move:
 
-    def __init__(self, from_sq, to_sq, board):
+    def __init__(self, from_sq, to_sq, board, promo_input):
         self.from_sq = from_sq
         self.to_sq = to_sq
 
         self.label = ''
         self.moved_piece = board[from_sq]
         self.destination_field = board[to_sq]
+        self.promo_input = promo_input
 
     def generate_move_notation(self):
         files = 'abcdefgh'

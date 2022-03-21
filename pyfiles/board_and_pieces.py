@@ -90,8 +90,10 @@ def wpawn(x, y, board, history):
 
 # promotion
 
-    if y == 1:
-        pass
+    if x == 1:
+        if board[0, y] == 0:
+            prom.add((0, y)) # normal move forward
+
     return out, enp, prom
 
 

@@ -22,6 +22,7 @@ def main():
     gs = GameSession()
     load_images()
     running = True
+    promo = 'Q'
     sq_selected = ()  # last click of a user
     player_clicks = []  # sq selected and destination sq
     highlights = []
@@ -31,6 +32,24 @@ def main():
                 running = False
                 print('\n\nNICE GAME:\n\n')
                 [print(move) for move in gs.notation]
+
+            if e.type == p.KEYDOWN:
+                if e.key == p.K_q:
+                    print('Q')
+                    promo = 90
+
+                if e.key == p.K_r:
+                    promo = 50
+
+                if e.key == p.K_b:
+                    promo = 32
+
+                if e.key == p.K_n:
+                    promo = 30
+
+            if e.type == p.KEYUP:
+                if e.key == p.K_q or e.key == p.K_r or e.key == p.K_b or e.key == p.K_n:
+                    print(f'Promo preference = {promo}')
 
             elif e.type == p.MOUSEBUTTONDOWN:
                 l_click, m_click, r_click = p.mouse.get_pressed(3)
@@ -49,7 +68,7 @@ def main():
                             highlights = h1 | h2 | h3
                         player_clicks.append(sq_selected)
                     if len(player_clicks) == 2:
-                        move = Move(player_clicks[0], player_clicks[1], gs.board)
+                        move = Move(player_clicks[0], player_clicks[1], gs.board, promo)
                         print(move.generate_move_notation())
                         gs.make_move(move)
                         sq_selected = ()  # deselect
