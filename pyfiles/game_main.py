@@ -22,7 +22,7 @@ def main():
     gs = GameSession()
     load_images()
     running = True
-    promo = 'Q'
+    promo = 90
     sq_selected = ()  # last click of a user
     player_clicks = []  # sq selected and destination sq
     highlights = []
@@ -35,7 +35,6 @@ def main():
 
             if e.type == p.KEYDOWN:
                 if e.key == p.K_q:
-                    print('Q')
                     promo = 90
 
                 if e.key == p.K_r:

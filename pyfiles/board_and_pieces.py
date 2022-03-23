@@ -92,7 +92,15 @@ def wpawn(x, y, board, history):
 
     if x == 1:
         if board[0, y] == 0:
-            prom.add((0, y)) # normal move forward
+            prom.add((0, y))  # normal move forward
+
+        if y + 1 <= 7:
+            if (board[0, y + 1]) * board[x, y] < 0:
+                prom.add((0, y + 1))
+
+        if y - 1 >= 0:
+            if (board[0, y - 1]) * board[x, y] < 0:
+                prom.add((0, y - 1))
 
     return out, enp, prom
 
@@ -134,6 +142,16 @@ def bpawn(x, y, board, history):
 
     # promotion
 
-    if y == 1:
-        pass
+    if x == 6:
+        if board[7, y] == 0:
+            prom.add((7, y))  # normal move forward
+
+        if y + 1 <= 7:
+            if (board[7, y + 1]) * board[x, y] < 0:
+                prom.add((7, y + 1))
+
+        if y - 1 >= 0:
+            if (board[7, y - 1]) * board[x, y] < 0:
+                prom.add((7, y - 1))
+
     return out, enp, prom
