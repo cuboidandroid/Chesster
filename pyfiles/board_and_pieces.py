@@ -56,6 +56,7 @@ def wpawn(x, y, board, history):
     out = set()
     enp = set()
     prom = set()
+    scope = set()
 
 # start move and normal move
 
@@ -67,10 +68,12 @@ def wpawn(x, y, board, history):
 # capture
 
     if (x-1 > 0) and (y+1 <= 7):
+        scope.add((x - 1, y + 1))
         if (board[x-1, y+1]) * board[x, y] < 0:
             out.add((x-1, y+1))
 
     if (x-1 > 0) and (y-1 >= 0):
+        scope.add((x - 1, y - 1))
         if (board[x-1, y-1]) * board[x, y] < 0:
             out.add((x-1, y-1))
 
@@ -95,20 +98,23 @@ def wpawn(x, y, board, history):
             prom.add((0, y))  # normal move forward
 
         if y + 1 <= 7:
+            scope.add((0, y + 1))
             if (board[0, y + 1]) * board[x, y] < 0:
                 prom.add((0, y + 1))
 
         if y - 1 >= 0:
+            scope.add((0, y - 1))
             if (board[0, y - 1]) * board[x, y] < 0:
                 prom.add((0, y - 1))
 
-    return out, enp, prom
+    return out, enp, prom, scope
 
 
 def bpawn(x, y, board, history):
     out = set()
     enp = set()
     prom = set()
+    scope = set()
 
     # start move and normal move
 
@@ -120,10 +126,12 @@ def bpawn(x, y, board, history):
     # capture
 
     if (x+1 < 7) and (y+1 <= 7):
+        scope.add((x + 1, y + 1))
         if (board[x + 1, y + 1]) * board[x, y] < 0:
             out.add((x + 1, y + 1))
 
     if (x+1 < 7) and (y-1 >= 0):
+        scope.add((x + 1, y - 1))
         if (board[x + 1, y - 1]) * board[x, y] < 0:
             out.add((x + 1, y - 1))
 
@@ -147,11 +155,13 @@ def bpawn(x, y, board, history):
             prom.add((7, y))  # normal move forward
 
         if y + 1 <= 7:
+            scope.add((7, y + 1))
             if (board[7, y + 1]) * board[x, y] < 0:
                 prom.add((7, y + 1))
 
         if y - 1 >= 0:
+            scope.add((7, y - 1))
             if (board[7, y - 1]) * board[x, y] < 0:
                 prom.add((7, y - 1))
 
-    return out, enp, prom
+    return out, enp, prom, scope

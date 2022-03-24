@@ -16,6 +16,7 @@ class GameSession:
         self.history = []
         self.enp = set()
         self.prom = set()
+        self.scope = set()
 
     @staticmethod
     def startup_board():
@@ -43,7 +44,7 @@ class GameSession:
 
         # check available moves for piece
 
-        opt, enp, prom = self.get_options((move.from_sq[0], move.from_sq[1]))
+        opt, enp, prom, scope = self.get_options((move.from_sq[0], move.from_sq[1]))
         if (move.to_sq[0], move.to_sq[1]) in opt:
             conditions.append(True)
         elif (move.to_sq[0], move.to_sq[1]) in enp:
@@ -58,9 +59,10 @@ class GameSession:
         return all(conditions)
 
     def get_options(self, field):
-        # opt = set()
+        opt = set()
         enp = set()
         prom = set()
+        scope = set()
 
         if abs(self.board[field]) == 30:
             opt = knight(field[0], field[1], self.board)
@@ -71,17 +73,27 @@ class GameSession:
         elif abs(self.board[field]) == 50:
             opt = rook(field[0], field[1], self.board)
         elif self.board[field] == 10:
-            opt, enp, prom = wpawn(field[0], field[1], self.board, self.history)
+            opt, enp, prom, scope = wpawn(field[0], field[1], self.board, self.history)
         elif self.board[field] == -10:
-            opt, enp, prom = bpawn(field[0], field[1], self.board, self.history)
+            opt, enp, prom, scope = bpawn(field[0], field[1], self.board, self.history)
         elif abs(self.board[field]) == 99:
             opt = king(field[0], field[1], self.board, self.history)
 
-        else:
-            opt = set()
-            enp = set()
-            prom = set()
-        return opt, enp, prom
+        return opt, enp, prom, scope
+
+    def all_attacked_squares(self, sign):
+        attacked = set()
+        for i in np.ndindex(8, 8):
+            if self.board[i] * sign > 0:  # the same sign
+                opt, _, _, scope = self.get_options(i)
+
+                if abs(self.board[i]) == 10:
+                    attacked.update(scope)
+                    print(self.board[i], scope)
+                else:
+                    attacked.update(opt)
+                    print(self.board[i], opt)
+        return attacked
 
     def make_move(self, move):
         if self.validate_move(move):
