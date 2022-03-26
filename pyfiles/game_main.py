@@ -70,8 +70,8 @@ def main():
                         move = Move(player_clicks[0], player_clicks[1], gs.board, promo)
                         print(move.generate_move_notation())
                         gs.make_move(move)
-                        print(gs.all_attacked_squares(1))
-                        print(gs.all_attacked_squares(-1))
+                        print('white scope: ', {gs.translate_square(f) for f in gs.all_attacked_squares(1)})
+                        print('black scope: ', {gs.translate_square(f) for f in gs.all_attacked_squares(-1)})
                         sq_selected = ()  # deselect
                         highlights = []
                         player_clicks = []

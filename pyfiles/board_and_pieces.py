@@ -1,55 +1,69 @@
 
 def bishop(x, y, board):
+    opt = set()
     scope = set()
     directions = [(1, 1), (-1, 1), (1, -1), (-1, -1)]
     for d in directions:
         for n in range(1, 8):
             if (0 <= x+d[0]*n < 8) and (0 <= y+d[1]*n < 8) and (board[x+d[0]*n, y+d[1]*n] == 0):
+                opt.add((x+d[0]*n, y+d[1]*n))
                 scope.add((x+d[0]*n, y+d[1]*n))
 
             elif (0 <= x+d[0]*n < 8) and (0 <= y+d[1]*n < 8) and (board[x+d[0]*n, y+d[1]*n] * board[x, y] > 0):
-                break
-
-            elif (0 <= x+d[0]*n < 8) and (0 <= y+d[1]*n < 8) and (board[x+d[0]*n, y+d[1]*n] * board[x, y] < 0):
                 scope.add((x+d[0]*n, y+d[1]*n))
                 break
 
-    return scope
+            elif (0 <= x+d[0]*n < 8) and (0 <= y+d[1]*n < 8) and (board[x+d[0]*n, y+d[1]*n] * board[x, y] < 0):
+                opt.add((x+d[0]*n, y+d[1]*n))
+                scope.add((x + d[0] * n, y + d[1] * n))
+                break
+
+    return opt, scope
 
 
 def rook(x, y, board):
+    opt = set()
     scope = set()
     directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     for d in directions:
         for n in range(1, 8):
             if (0 <= x + d[0] * n < 8) and (0 <= y + d[1] * n < 8) and (board[x + d[0] * n, y + d[1] * n] == 0):
+                opt.add((x + d[0] * n, y + d[1] * n))
                 scope.add((x + d[0] * n, y + d[1] * n))
 
             elif (0 <= x + d[0] * n < 8) and (0 <= y + d[1] * n < 8) and (
                     board[x + d[0] * n, y + d[1] * n] * board[x, y] > 0):
+                scope.add((x + d[0] * n, y + d[1] * n))
                 break
 
             elif (0 <= x + d[0] * n < 8) and (0 <= y + d[1] * n < 8) and (
                     board[x + d[0] * n, y + d[1] * n] * board[x, y] < 0):
+                opt.add((x + d[0] * n, y + d[1] * n))
                 scope.add((x + d[0] * n, y + d[1] * n))
                 break
 
-    return scope
+    return opt, scope
 
 
 def queen(x, y, board):
-    return bishop(x, y, board) | rook(x, y, board)
+    bishop_opt, bishop_scope = bishop(x, y, board)
+    rook_opt, rook_scope = rook(x, y, board)
+    return bishop_opt | rook_opt, bishop_scope | rook_scope
 
 
 def knight(x, y, board):
-    return {(x+i, y+j) for i, j in zip([1, 2, -1, -2, 1, 2, -1, -2], [2, 1, 2, 1, -2, -1, -2, -1])
-            if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}
+    return {(x+i, y+j) for i, j in zip([1, 2, -1, -2, 1, 2, -1, -2], [2, 1, 2, 1, -2, -1, -2, -1])  # opt
+            if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}, \
+           {(x+i, y+j) for i, j in zip([1, 2, -1, -2, 1, 2, -1, -2], [2, 1, 2, 1, -2, -1, -2, -1])  # scope
+            if (0 <= x + i < 8) and (0 <= y + j < 8)}
 # if inside the board and square is not occupied by same colored piece
 
 
 def king(x, y, board, history):
-    return {(x + i, y + j) for i, j in zip([-1, 0, 1, -1, 0, 1, -1, 0, 1], [-1, -1, -1, 0, 0, 0, 1, 1, 1])
-            if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x+i, y+j]) * board[x, y] <= 0}
+    return {(x + i, y + j) for i, j in zip([-1, 0, 1, -1, 1, -1, 0, 1], [-1, -1, -1, 0, 0, 1, 1, 1])  # opt
+            if (0 <= x + i < 8) and (0 <= y + j < 8) and (board[x + i, y + j]) * board[x, y] <= 0}, \
+           {(x + i, y + j) for i, j in zip([-1, 0, 1, -1, 1, -1, 0, 1], [-1, -1, -1, 0, 0, 1, 1, 1])  # scope
+            if (0 <= x + i < 8) and (0 <= y + j < 8)}
 
 
 def wpawn(x, y, board, history):

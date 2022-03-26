@@ -65,19 +65,19 @@ class GameSession:
         scope = set()
 
         if abs(self.board[field]) == 30:
-            opt = knight(field[0], field[1], self.board)
+            opt, scope = knight(field[0], field[1], self.board)
         elif abs(self.board[field]) == 32:
-            opt = bishop(field[0], field[1], self.board)
+            opt, scope = bishop(field[0], field[1], self.board)
         elif abs(self.board[field]) == 90:
-            opt = queen(field[0], field[1], self.board)
+            opt, scope = queen(field[0], field[1], self.board)
         elif abs(self.board[field]) == 50:
-            opt = rook(field[0], field[1], self.board)
+            opt, scope = rook(field[0], field[1], self.board)
         elif self.board[field] == 10:
             opt, enp, prom, scope = wpawn(field[0], field[1], self.board, self.history)
         elif self.board[field] == -10:
             opt, enp, prom, scope = bpawn(field[0], field[1], self.board, self.history)
         elif abs(self.board[field]) == 99:
-            opt = king(field[0], field[1], self.board, self.history)
+            opt, scope = king(field[0], field[1], self.board, self.history)
 
         return opt, enp, prom, scope
 
@@ -86,13 +86,8 @@ class GameSession:
         for i in np.ndindex(8, 8):
             if self.board[i] * sign > 0:  # the same sign
                 opt, _, _, scope = self.get_options(i)
-
-                if abs(self.board[i]) == 10:
-                    attacked.update(scope)
-                    print(self.board[i], scope)
-                else:
-                    attacked.update(opt)
-                    print(self.board[i], opt)
+                attacked.update(scope)
+                # print(self.board[i], {self.translate_square(f) for f in scope})
         return attacked
 
     def make_move(self, move):
@@ -146,6 +141,12 @@ class GameSession:
             self.white_to_move = not self.white_to_move
         else:
             pass
+
+    @staticmethod
+    def translate_square(cords):
+        files = 'abcdefgh'
+        ranks = '12345678'
+        return files[cords[1]] + ranks[::-1][cords[0]]
 
     @staticmethod
     def piece_name(n):
