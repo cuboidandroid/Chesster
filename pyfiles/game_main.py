@@ -22,7 +22,6 @@ def main():
     gs = GameSession()
     load_images()
     running = True
-    promo = 90
     sq_selected = ()  # last click of a user
     player_clicks = []  # sq selected and destination sq
     highlights = []
@@ -35,20 +34,20 @@ def main():
 
             if e.type == p.KEYDOWN:
                 if e.key == p.K_q:
-                    promo = 90
+                    gs.promo = 90
 
                 if e.key == p.K_r:
-                    promo = 50
+                    gs.promo = 50
 
                 if e.key == p.K_b:
-                    promo = 32
+                    gs.promo = 32
 
                 if e.key == p.K_n:
-                    promo = 30
+                    gs.promo = 30
 
             if e.type == p.KEYUP:
                 if e.key == p.K_q or e.key == p.K_r or e.key == p.K_b or e.key == p.K_n:
-                    print(f'Promo preference = {promo}')
+                    print(f'Promo preference = {gs.promo}')
 
             elif e.type == p.MOUSEBUTTONDOWN:
                 l_click, m_click, r_click = p.mouse.get_pressed(3)
@@ -67,11 +66,11 @@ def main():
                             highlights = h1 | h2 | h3
                         player_clicks.append(sq_selected)
                     if len(player_clicks) == 2:
-                        move = Move(player_clicks[0], player_clicks[1], gs.board, promo)
+                        move = Move(player_clicks[0], player_clicks[1], gs.board, gs.promo)
                         print(move.generate_move_notation())
                         gs.make_move(move)
-                        print('white scope: ', {gs.translate_square(f) for f in gs.all_attacked_squares(1)})
-                        print('black scope: ', {gs.translate_square(f) for f in gs.all_attacked_squares(-1)})
+                        print('white scope: ', {gs.translate_square(f) for f in gs.get_attacked_squares(1)})
+                        print('black scope: ', {gs.translate_square(f) for f in gs.get_attacked_squares(-1)})
                         sq_selected = ()  # deselect
                         highlights = []
                         player_clicks = []

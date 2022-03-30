@@ -17,6 +17,7 @@ class GameSession:
         self.enp = set()
         self.prom = set()
         self.scope = set()
+        self.promo = 90
 
     @staticmethod
     def startup_board():
@@ -81,7 +82,7 @@ class GameSession:
 
         return opt, enp, prom, scope
 
-    def all_attacked_squares(self, sign):
+    def get_attacked_squares(self, sign):
         attacked = set()
         for i in np.ndindex(8, 8):
             if self.board[i] * sign > 0:  # the same sign
